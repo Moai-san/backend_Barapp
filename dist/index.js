@@ -21,7 +21,7 @@ const pool = new Pool({
     }
 });
 const Configuracion = {
-    server: 'backend-barapp-tst.herokuapp.com',
+    //server: 'backend-barapp-tst.herokuapp.com',
     port: 3018
 };
 pool.connect(function (error) {
@@ -31,7 +31,7 @@ pool.connect(function (error) {
     }
     console.log('Se a conectado a la base de datos postgres');
 });
-app.listen(Configuracion, () => {
+app.listen(PORT, () => {
     console.log(`El servidor esta escuchando en ${Configuracion.server}:${Configuracion.port}`);
 });
 //Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
