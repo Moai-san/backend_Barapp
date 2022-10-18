@@ -49,7 +49,7 @@ app.post('/LogIn', bodyParser.json(), function (request, response) {
     let mail = request.body.mail;
     let password = request.body.password;
     if (mail && password) {
-        pool.query("SELECT * FROM public.users WHERE mail = $1 and password = crypt($2, password)", [mail, password], async function (error, results, fields) {
+        pool.query("SELECT * FROM public.Usuarios WHERE mail = $1 and password = crypt($2, password)", [mail, password], async function (error, results, fields) {
             if (results != undefined) {
                 response.send(results.rows[0]);
             }
@@ -71,7 +71,7 @@ app.post('/crearUsuarios', (req, res) => {
     let mail = req.body.mail;
     let password = req.body.password;
     let bdate = req.body.bdate;
-    pool.query("INSERT INTO public.users (name, surname, mail, password, bdate) VALUES ($1,$2,$3,crypt($4, gen_salt('bf')),$5)", [name, surname, mail, password, bdate], (req1, resultados) => {
+    pool.query("INSERT INTO public.Usuarios (name, surname, mail, password, bdate) VALUES ($1,$2,$3,crypt($4, gen_salt('bf')),$5)", [name, surname, mail, password, bdate], (req1, resultados) => {
         res.status(201).send(resultados);
     });
 });
@@ -80,7 +80,7 @@ app.put('/modificarClaveUsuarios', (req, res) => {
     let actual_password = req.body.actual_password;
     let new_password = req.body.new_password;
     if (actual_password != new_password) {
-        pool.query("UPDATE public.users SET password = crypt($1, gen_salt('bf')) WHERE mail=$2", [new_password, mail], (req1, resultados) => {
+        pool.query("UPDATE public.Usuarios SET password = crypt($1, gen_salt('bf')) WHERE mail=$2", [new_password, mail], (req1, resultados) => {
             res.status(200).send(resultados);
         });
     }
@@ -90,7 +90,7 @@ app.put('/modificarClaveUsuarios', (req, res) => {
 });
 app.delete('/eliminarUsuarios/:id', (req, res) => {
     let id = req.params.id;
-    pool.query('DELETE FROM public.users WHERE id=$1', [id], (res1, resultados) => {
+    pool.query('DELETE FROM public.Usuarios WHERE id=$1', [id], (res1, resultados) => {
         res.status(200).send(resultados);
     });
 });
