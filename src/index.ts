@@ -25,7 +25,7 @@ const pool = new Pool({
 });
 
 const Configuracion={
-    server:'bar.moai-san.net',
+    server:'backend-barapp-tst.herokuapp.com',
     port : 3018
 };
  
