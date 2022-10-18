@@ -41,6 +41,9 @@ app.get('/usuarios', (req, res) => {
         res.status(200).send(resultados.rows);
     });
 });
+app.get('/ping', (req, res) => {
+    res.status(200).send("pong");
+});
 //Metodo usado para iniciar sesion, verifica los datos con la base de datos
 app.post('/LogIn', bodyParser.json(), function (request, response) {
     let mail = request.body.mail;
