@@ -2,23 +2,30 @@ const express=require('express');
 const {Pool} = require('pg');
 const cors=require('cors');
 const app=express();
+const PORT = process.env.PORT
 const bodyParser = require('body-parser');
-
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 app.use(cors());
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 // Conexion de backend con base de datos Postgres
 const pool = new Pool({
-    host: 'localhost',
-    user: 'postgres',
-    password: '5440',
-    database: 'punchstarter',
-    port: '5432'
+    /*host: 'ec2-52-70-45-163.compute-1.amazonaws.com',
+    user: 'iopjgmnjpgrbvg',
+    password: 'e89c1eb55fc4c1dddfa0111bf01deca8080fb3d3ce6eced84e8faea9a2fc0d49',
+    database: 'dfg771800piks1',
+    port: 5432,*/
+    connectionString: "postgres://iopjgmnjpgrbvg:e89c1eb55fc4c1dddfa0111bf01deca8080fb3d3ce6eced84e8faea9a2fc0d49@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dfg771800piks1",
+    
+    ssl:
+    {
+        rejectUnathorized: false
+    }
 });
 
 const Configuracion={
-    server:"127.0.0.1",
+    server:'bar.moai-san.net',
     port : 3018
 };
  
