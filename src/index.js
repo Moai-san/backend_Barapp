@@ -64,6 +64,9 @@ pool.connect(function (error) {
 app.listen(Configuracion, function () {
     console.log("El servidor esta escuchando en ".concat(Configuracion.server, ":").concat(Configuracion.port));
 });
+app.get('/ping', function (req, res) {
+    res.status(200).send("pong");
+});
 //Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios', function (req, res) {
     pool.query("SELECT * FROM public.users ORDER BY id ASC", function (req1, resultados) {
