@@ -23,11 +23,6 @@ const pool = new Pool({
         rejectUnathorized: false
     }
 });
-
-const Configuracion={
-    server:'backend-barapp-tst.herokuapp.com',
-    port : 3018
-};
  
 pool.connect(function(error:any){
     if(error){
@@ -37,15 +32,17 @@ pool.connect(function(error:any){
     console.log('Se a conectado a la base de datos postgres');
 });
 
-app.listen(Configuracion,()=>{
-    console.log(`El servidor esta escuchando en ${Configuracion.server}:${Configuracion.port}`);
+app.listen(PORT,()=>{
+    console.log(`El servidor esta escuchando en 'backend-barapp-tst.herokuapp.com':${PORT}`);
 });
 
-
+app.get('/ping', (req, res) => {
+    res.status(200).send("pong");
+});
 
 //Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios',(req:any,res:any)=>{
-      pool.query("SELECT * FROM public.users ORDER BY id ASC",(req1:any,resultados:any)=>{
+      pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
           console.log(resultados.rows);
           res.status(200).send(resultados.rows);
       });
@@ -57,7 +54,7 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 	let mail = request.body.mail;
 	let password = request.body.password;
 	if (mail && password){
-		pool.query("SELECT * FROM public.users WHERE mail = $1 and password = crypt($2, password)", [mail, password], async function(error:any, results:any, fields:any){
+		pool.query("SELECT * FROM public.Usuarios WHERE mail = $1 and password = crypt($2, password)", [mail, password], async function(error:any, results:any, fields:any){
             if(results != undefined){
                 response.send(results.rows[0]);
             }
@@ -82,7 +79,7 @@ app.post('/crearUsuarios',(req:any,res:any)=>{
     let password=req.body.password;
     let bdate=req.body.bdate;
 
-    pool.query("INSERT INTO public.users (name, surname, mail, password, bdate) VALUES ($1,$2,$3,crypt($4, gen_salt('bf')),$5)",[name,surname,mail,password,bdate],(req1:any,resultados:any)=>{
+    pool.query("INSERT INTO public.Usuarios (name, surname, mail, password, bdate) VALUES ($1,$2,$3,crypt($4, gen_salt('bf')),$5)",[name,surname,mail,password,bdate],(req1:any,resultados:any)=>{
         res.status(201).send(resultados);
     });
 });
@@ -93,7 +90,7 @@ app.put('/modificarClaveUsuarios',(req:any,res:any)=>{
     let new_password=req.body.new_password;
 
     if(actual_password != new_password){
-        pool.query("UPDATE public.users SET password = crypt($1, gen_salt('bf')) WHERE mail=$2",[new_password, mail],(req1:any,resultados:any)=>{
+        pool.query("UPDATE public.Usuarios SET password = crypt($1, gen_salt('bf')) WHERE mail=$2",[new_password, mail],(req1:any,resultados:any)=>{
         res.status(200).send(resultados);
     });
     }
@@ -105,7 +102,7 @@ app.put('/modificarClaveUsuarios',(req:any,res:any)=>{
 app.delete('/eliminarUsuarios/:id',(req:any,res:any)=>{
     let id=req.params.id;
 
-    pool.query('DELETE FROM public.users WHERE id=$1',[id],(res1:any,resultados:any)=>{
+    pool.query('DELETE FROM public.Usuarios WHERE id=$1',[id],(res1:any,resultados:any)=>{
      res.status(200).send(resultados);
     });
 })

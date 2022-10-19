@@ -20,10 +20,6 @@ const pool = new Pool({
         rejectUnathorized: false
     }
 });
-const Configuracion = {
-    //server: 'backend-barapp-tst.herokuapp.com',
-    port: 3018
-};
 pool.connect(function (error) {
     if (error) {
         console.log("No se a logrado conectar con la base de datos");
@@ -32,17 +28,17 @@ pool.connect(function (error) {
     console.log('Se a conectado a la base de datos postgres');
 });
 app.listen(PORT, () => {
-    console.log(`El servidor esta escuchando en ${Configuracion.server}:${Configuracion.port}`);
-});
-//Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
-app.get('/usuarios', (req, res) => {
-    pool.query("SELECT * FROM public.users ORDER BY id ASC", (req1, resultados) => {
-        console.log(resultados.rows);
-        res.status(200).send(resultados.rows);
-    });
+    console.log(`El servidor esta escuchando en 'backend-barapp-tst.herokuapp.com':${PORT}`);
 });
 app.get('/ping', (req, res) => {
     res.status(200).send("pong");
+});
+//Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
+app.get('/usuarios', (req, res) => {
+    pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC", (req1, resultados) => {
+        console.log(resultados.rows);
+        res.status(200).send(resultados.rows);
+    });
 });
 //Metodo usado para iniciar sesion, verifica los datos con la base de datos
 app.post('/LogIn', bodyParser.json(), function (request, response) {
