@@ -2,12 +2,12 @@ const express=require('express');
 const {Pool} = require('pg');
 const cors=require('cors');
 const app=express();
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 47686;
 const bodyParser = require('body-parser');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 app.use(cors());
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Conexion de backend con base de datos Postgres
 const pool = new Pool({
@@ -36,25 +36,30 @@ app.listen(PORT,()=>{
     console.log(`El servidor esta escuchando en 'backend-barapp-tst.herokuapp.com':${PORT}`);
 });
 
+//pingpong, lit es un request que no hace nada mas, la uso pa saber que puedo llegar al back
 app.get('/ping', (req, res) => {
     res.status(200).send("pong");
 });
 
-//Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
-app.get('/usuarios',(req:any,res:any)=>{
-      pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
-          console.log(resultados.rows);
-          res.status(200).send(resultados.rows);
-      });
+//Metodo usado para el registro de usuarios
+app.post('/regUser',(req:any,res:any)=>{
+    let rut=req.body.rut;
+    let uname=req.body.uname;
+    let password=req.body.password;
+    let celular=req.body.celular;
+    pool.query("INSERT INTO public.usuarios (rut,uname, password, celular) VALUES ($1,$2,crypt($3, gen_salt('bf')),$4)",[rut,uname,password,celular],(req1:any,resultados:any)=>{
+        res.status(201).send(resultados);
+        console.log(req1);
+    });
 });
 
 //Metodo usado para iniciar sesion, verifica los datos con la base de datos
 app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 {
-	let mail = request.body.mail;
+	let uname = request.body.uname;
 	let password = request.body.password;
-	if (mail && password){
-		pool.query("SELECT * FROM public.Usuarios WHERE mail = $1 and password = crypt($2, password)", [mail, password], async function(error:any, results:any, fields:any){
+	if (uname && password){
+		pool.query("SELECT * FROM public.usuarios WHERE uname = $1 and password = crypt($2, password)", [uname, password], async function(error:any, results:any, fields:any){
             if(results != undefined){
                 response.send(results.rows[0]);
             }
@@ -71,38 +76,10 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 	}
 });
 
-//Metodo usado para el registro de usuarios
-app.post('/crearUsuarios',(req:any,res:any)=>{
-    let name=req.body.name;
-    let surname=req.body.surname;
-    let mail=req.body.mail;
-    let password=req.body.password;
-    let bdate=req.body.bdate;
-
-    pool.query("INSERT INTO public.Usuarios (name, surname, mail, password, bdate) VALUES ($1,$2,$3,crypt($4, gen_salt('bf')),$5)",[name,surname,mail,password,bdate],(req1:any,resultados:any)=>{
-        res.status(201).send(resultados);
-    });
+//Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
+app.get('/usuarios',(req:any,res:any)=>{
+      pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
+          console.log(resultados.rows);
+          res.status(200).send(resultados.rows);
+      });
 });
-
-app.put('/modificarClaveUsuarios',(req:any,res:any)=>{
-    let mail=req.body.mail;
-    let actual_password=req.body.actual_password;
-    let new_password=req.body.new_password;
-
-    if(actual_password != new_password){
-        pool.query("UPDATE public.Usuarios SET password = crypt($1, gen_salt('bf')) WHERE mail=$2",[new_password, mail],(req1:any,resultados:any)=>{
-        res.status(200).send(resultados);
-    });
-    }
-    else{
-        res.send(null);
-    }
-});
-
-app.delete('/eliminarUsuarios/:id',(req:any,res:any)=>{
-    let id=req.params.id;
-
-    pool.query('DELETE FROM public.Usuarios WHERE id=$1',[id],(res1:any,resultados:any)=>{
-     res.status(200).send(resultados);
-    });
-})
