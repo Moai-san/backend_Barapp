@@ -76,10 +76,16 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 	}
 });
 
-//Metodo usado para la pagina solo-admin, crea una tabla con todos los usuarios en la base de datos
+//crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios',(req:any,res:any)=>{
       pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
           console.log(resultados.rows);
           res.status(200).send(resultados.rows);
       });
 });
+
+app.get('/getMesas',bodyParser.json(), (request:any, response:any) => {
+    pool.query("SELECT * FROM public.mesas", function(error:any, results:any, fields:any){
+      response.send(results);
+    })
+  })
