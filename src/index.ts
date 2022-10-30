@@ -90,3 +90,10 @@ app.get('/getMesas',(request:any, response:any) => {
       response.send(JSON.stringify(results.rows));
     })
   })
+
+  app.get('/getProductos',(request:any, response:any) => {
+    pool.query("SELECT * FROM public.productos ORDER BY id ASC", function(error:any, results:any, fields:any){
+        console.log("toy mandando productos al front"+results.rows);
+      response.send(JSON.stringify(results.rows));
+    })
+  })
