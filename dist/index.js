@@ -78,4 +78,10 @@ app.get('/getMesas', (request, response) => {
         response.send(JSON.stringify(results.rows));
     });
 });
+app.get('/getProductos', (request, response) => {
+    pool.query("SELECT * FROM public.productos ORDER BY id ASC", function (error, results, fields) {
+        console.log("toy mandando productos al front" + results.rows);
+        response.send(JSON.stringify(results.rows));
+    });
+});
 //# sourceMappingURL=index.js.map
