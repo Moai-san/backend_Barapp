@@ -73,7 +73,7 @@ app.get('/usuarios', (req, res) => {
     });
 });
 app.get('/getMesas', (request, response) => {
-    pool.query("SELECT * FROM public.mesas", function (error, results, fields) {
+    pool.query("SELECT * FROM public.mesas ORDER BY id ASC", function (error, results, fields) {
         console.log("toy mandando mesas al front" + results.rows);
         response.send(JSON.stringify(results.rows));
     });
