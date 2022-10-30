@@ -72,9 +72,10 @@ app.get('/usuarios', (req, res) => {
         res.status(200).send(resultados.rows);
     });
 });
-app.get('/getMesas', bodyParser.json(), (request, response) => {
+app.get('/getMesas', (request, response) => {
     pool.query("SELECT * FROM public.mesas", function (error, results, fields) {
-        response.send(results);
+        console.log("toy mandando mesas al front" + results);
+        response.send(JSON.stringify(results));
     });
 });
 //# sourceMappingURL=index.js.map

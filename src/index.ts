@@ -84,8 +84,9 @@ app.get('/usuarios',(req:any,res:any)=>{
       });
 });
 
-app.get('/getMesas',bodyParser.json(), (request:any, response:any) => {
+app.get('/getMesas',(request:any, response:any) => {
     pool.query("SELECT * FROM public.mesas", function(error:any, results:any, fields:any){
-      response.send(results);
+        console.log("toy mandando mesas al front"+results);
+      response.send(JSON.stringify(results));
     })
   })
