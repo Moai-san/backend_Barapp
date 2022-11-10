@@ -65,6 +65,13 @@ app.post('/LogIn', bodyParser.json(), function (request, response) {
         response.end();
     }
 });
+app.post('/mod_mesaStatus', (req, res) => {
+    let mesa = req.body.mesa;
+    pool.query("UPDATE public.mesas SET status = NOT status WHERE id = $1;", [mesa], (req1, resultados) => {
+        console.log("hola desde modMesa");
+        res.status(200).send(resultados.rows);
+    });
+});
 //crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios', (req, res) => {
     pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC", (req1, resultados) => {
