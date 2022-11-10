@@ -76,6 +76,15 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 	}
 });
 
+app.post('/mod_mesaStatus',(req:any,res:any)=>
+{
+    let mesa = req.body.mesa;
+    pool.query("UPDATE public.mesas SET status = NOT status WHERE id = $1;",[mesa],(req1:any,resultados:any)=>{
+        console.log("hola desde modMesa");
+        res.status(200).send(resultados.rows);
+    });
+});
+
 //crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios',(req:any,res:any)=>{
       pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
