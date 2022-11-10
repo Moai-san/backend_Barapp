@@ -85,6 +85,18 @@ app.post('/mod_mesaStatus',(req:any,res:any)=>
     });
 });
 
+app.post('/postDiscount',(req:any,res:any)=>
+{
+    let porcentaje= req.body.porcentaje;
+    let mincompra= req.body.mincompra ;
+    let descripcion= req.body.descripcion ;
+    let status= req.body.status ;
+    pool.query("INSERT INTO public.descuentos (porcentaje,mincompra, descripcion, status) VALUES ($1,$2,$3,$4)",[porcentaje,mincompra,descripcion,status],(req1:any,resultados:any)=>{
+        res.status(201).send(resultados);
+        console.log(req1);
+    });
+});
+
 //crea una tabla con todos los usuarios en la base de datos
 app.get('/usuarios',(req:any,res:any)=>{
       pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
