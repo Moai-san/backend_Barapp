@@ -130,11 +130,12 @@ app.post('/verMesa', (req, res) => {
             res.status(200).send(resultados.rows[0]);
         });
     });
-    /*
-        pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
-            console.log(resultados.rows);
-            res.status(200).send(resultados.rows);
-        });*/
+});
+app.post('/verBoleta', (req, res) => {
+    let boleta = req.body.boleta;
+    pool.query('SELECT * FROM public."detalle" WHERE "idBoleta" = $1;', [boleta], (req1, resultados) => {
+        res.status(200).send(resultados.rows[0]);
+    });
 });
 app.post('/cerrarMesa', (req, res) => {
     let mesa = req.body.mesa;
