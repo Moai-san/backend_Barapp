@@ -88,6 +88,10 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 
 app.post('/addProduct',(req:any,res:any)=>
 {
+    console.log("HOLAAAAA CTM");
+    console.log(req.body);
+    
+    
     /*
     {
         mesa = id_mesa,
