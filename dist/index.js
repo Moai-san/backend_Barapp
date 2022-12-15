@@ -15,7 +15,15 @@ const pool = new Pool({
     password: 'e89c1eb55fc4c1dddfa0111bf01deca8080fb3d3ce6eced84e8faea9a2fc0d49',
     database: 'dfg771800piks1',
     port: 5432,*/
-    connectionString: "postgres://iopjgmnjpgrbvg:e89c1eb55fc4c1dddfa0111bf01deca8080fb3d3ce6eced84e8faea9a2fc0d49@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dfg771800piks1",
+    //connectionString: "postgres://iopjgmnjpgrbvg:e89c1eb55fc4c1dddfa0111bf01deca8080fb3d3ce6eced84e8faea9a2fc0d49@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dfg771800piks1",
+    /*
+    Host:    ec2-54-160-109-68.compute-1.amazonaws.com
+    Database:    df8f3r4kvt6t3k
+    User:    hxumrzhhydidnh
+    Port:    5432
+    Password:    845cc24444648f8b65f27f9f24dd7e6b9c8bfd8ec5cb04f2610ac4ab56215927
+    */
+    connectionString: "postgres://hxumrzhhydidnh:845cc24444648f8b65f27f9f24dd7e6b9c8bfd8ec5cb04f2610ac4ab56215927@ec2-54-160-109-68.compute-1.amazonaws.com:5432/df8f3r4kvt6t3k",
     ssl: {
         rejectUnathorized: false
     }
