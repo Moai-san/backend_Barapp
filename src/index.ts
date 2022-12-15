@@ -1,7 +1,7 @@
 const express=require('express');
 const {Pool} = require('pg');
-const cors=require('cors');
-const app=express();
+const cors = require('cors');
+const app = express();
 const PORT = process.env.PORT || 47686;
 const bodyParser = require('body-parser');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -86,6 +86,61 @@ app.post('/LogIn', bodyParser.json(), function(request:any, response:any)
 	}
 });
 
+app.post('/addProduct',(req:any,res:any)=>
+{
+    /*
+    {
+        mesa = id_mesa,
+        product = id_product,
+        cant = cantidad
+    }
+    */
+    let mesa = req.body.mesa;
+    let product = req.body.product;
+    let cant = req.body.cant;
+    pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);',[mesa, product, cant],(req1:any,resultados:any)=>{
+        res.status(200).send(resultados.rows);
+    });
+});
+
+app.post('/abrirMesa',(req:any,res:any)=>{
+    console.log(req.body)
+    let mesa = req.body.mesa;
+    let usuario = req.body.mesa;
+
+    pool.query('INSERT INTO public.boletas(total) VALUES (0) RETURNING "idBoleta";',[],(req1:any,resultados:any)=>{
+        //console.log(resultados.rows);
+        let boleta = resultados.rows[0].idBoleta
+
+        pool.query('INSERT INTO public."usuarioMesaBoleta"("idUsuario", "idMesa", "idBoleta") VALUES ($1, $2, $3);',[usuario, mesa, boleta],(req1:any,resultados:any)=>{
+            console.log("creado nueva relacion usuario mesa boleta")
+        });
+
+        pool.query("UPDATE public.mesas SET status = true WHERE id = $1;",[mesa],(req1:any,resultados:any)=>{
+            console.log("hola desde abrirMesa");
+            res.status(200).send("ok");
+        });
+
+    });
+    
+/*
+    pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
+        console.log(resultados.rows);
+        res.status(200).send(resultados.rows);
+    });*/
+});
+
+app.post('/cerrarMesa',(req:any,res:any)=>{
+    let mesa = req.body.mesa;
+
+    pool.query("UPDATE public.mesas SET status = false WHERE id = $1;",[mesa],(req1:any,resultados:any)=>{
+        console.log("hola desde cerrarMesa");
+        res.status(200).send("ok");
+    });
+
+});
+
+//este cierra mesa, falta cerrar con boleta
 app.post('/mod_mesaStatus',(req:any,res:any)=>
 {
     let mesa = req.body.mesa;
