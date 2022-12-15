@@ -83,7 +83,6 @@ app.post('/addProduct', (req, res) => {
         cant = cantidad
     }
     */
-    console.log(req.body);
     let mesa = req.body.mesa;
     let products = req.body.pedido;
     console.log(Object.entries(products));
