@@ -81,9 +81,8 @@ app.post('/addProduct', (req, res) => {
         cant = cantidad
     }
     */
-    console.log(req.body);
     let mesa = req.body.mesa;
-    let products = req.body.pedido;
+    let products = JSON.parse(req.body.pedido);
     console.log(Object.entries(products));
     pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;', [mesa], (req1, resultados) => {
         console.log("hola desde cerrarMesa");

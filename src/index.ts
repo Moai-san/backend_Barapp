@@ -96,7 +96,7 @@ app.post('/addProduct',(req:any,res:any)=>
     }
     */
    let mesa = req.body.mesa;
-   let products = req.body.pedido;
+   let products = JSON.parse(req.body.pedido);
    console.log(Object.entries(products))
 
     pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;',[mesa],(req1:any,resultados:any)=>{
