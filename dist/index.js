@@ -73,6 +73,49 @@ app.post('/LogIn', bodyParser.json(), function (request, response) {
         response.end();
     }
 });
+app.post('/addProduct', (req, res) => {
+    /*
+    {
+        mesa = id_mesa,
+        product = id_product,
+        cant = cantidad
+    }
+    */
+    let mesa = req.body.mesa;
+    let product = req.body.product;
+    let cant = req.body.cant;
+    pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);', [mesa, product, cant], (req1, resultados) => {
+        res.status(200).send(resultados.rows);
+    });
+});
+app.post('/abrirMesa', (req, res) => {
+    let mesa = req.body.mesa;
+    let usuario = req.body.mesa;
+    pool.query('INSERT INTO public.boletas(total) VALUES (0) RETURNING "idBoleta";', [], (req1, resultados) => {
+        //console.log(resultados.rows);
+        let boleta = resultados.rows[0].idBoleta;
+        pool.query('INSERT INTO public."usuarioMesaBoleta"("idUsuario", "idMesa", "idBoleta") VALUES ($1, $2, $3);', [usuario, mesa, boleta], (req1, resultados) => {
+            console.log("creado nueva relacion usuario mesa boleta");
+        });
+        pool.query("UPDATE public.mesas SET status = true WHERE id = $1;", [mesa], (req1, resultados) => {
+            console.log("hola desde abrirMesa");
+            res.status(200).send("ok");
+        });
+    });
+    /*
+        pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
+            console.log(resultados.rows);
+            res.status(200).send(resultados.rows);
+        });*/
+});
+app.post('/cerrarMesa', (req, res) => {
+    let mesa = req.body.mesa;
+    pool.query("UPDATE public.mesas SET status = false WHERE id = $1;", [mesa], (req1, resultados) => {
+        console.log("hola desde cerrarMesa");
+        res.status(200).send("ok");
+    });
+});
+//este cierra mesa, falta cerrar con boleta
 app.post('/mod_mesaStatus', (req, res) => {
     let mesa = req.body.mesa;
     pool.query("UPDATE public.mesas SET status = NOT status WHERE id = $1;", [mesa], (req1, resultados) => {
