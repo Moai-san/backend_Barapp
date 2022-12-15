@@ -95,16 +95,16 @@ app.post('/addProduct',(req:any,res:any)=>
         cant = cantidad
     }
     */
-    console.log(req.body)
-    let mesa = req.body.mesa;
-    let products = req.body.pedido;
+   let mesa = req.body.mesa;
+   let products = req.body.pedido;
+   console.log(Object.entries(products))
 
     pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;',[mesa],(req1:any,resultados:any)=>{
         console.log("hola desde cerrarMesa");
         let boleta = resultados.rows[0].idBoleta
-        for (let product in Object.keys(products)){
-            pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);',[boleta, product, products.product],(req1:any,resultados:any)=>{
-                /*este seria un buen punto para poner el calculo del total de la boleta */
+        for (let product of Object.entries(products)){
+            pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);',[boleta, product[0], product[1]],(req1:any,resultados:any)=>{
+                console.log(resultados)
             });
         }
         res.status(200).send(resultados.rows);
