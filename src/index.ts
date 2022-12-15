@@ -107,6 +107,7 @@ app.post('/addProduct',(req:any,res:any)=>
                 /*este seria un buen punto para poner el calculo del total de la boleta */
             });
         }
+        res.status(200).send(resultados.rows);
     });
 
     /*
