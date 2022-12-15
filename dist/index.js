@@ -74,6 +74,8 @@ app.post('/LogIn', bodyParser.json(), function (request, response) {
     }
 });
 app.post('/addProduct', (req, res) => {
+    console.log("HOLAAAAA CTM");
+    console.log(req.body);
     /*
     {
         mesa = id_mesa,
