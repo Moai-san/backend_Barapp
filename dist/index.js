@@ -82,11 +82,22 @@ app.post('/addProduct', (req, res) => {
     }
     */
     let mesa = req.body.mesa;
-    let product = req.body.product;
-    let cant = req.body.cant;
-    pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);', [mesa, product, cant], (req1, resultados) => {
+    let products = req.body.pedido;
+    console.log(Object.entries(products));
+    pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;', [mesa], (req1, resultados) => {
+        console.log("hola desde cerrarMesa");
+        let boleta = resultados.rows[0].idBoleta;
+        for (let product of Object.entries(products)) {
+            pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);', [boleta, product[0], product[1]], (req1, resultados) => {
+                console.log(resultados);
+            });
+        }
         res.status(200).send(resultados.rows);
     });
+    /*
+    pool.query('INSERT INTO public.detalle("idBoleta", "idProducto", cant) VALUES ($1, $2, $3);',[mesa, product, cant],(req1:any,resultados:any)=>{
+        res.status(200).send(resultados.rows);
+    });*/
 });
 app.post('/abrirMesa', (req, res) => {
     let mesa = req.body.mesa;
@@ -112,7 +123,14 @@ app.post('/cerrarMesa', (req, res) => {
     let mesa = req.body.mesa;
     pool.query("UPDATE public.mesas SET status = false WHERE id = $1;", [mesa], (req1, resultados) => {
         console.log("hola desde cerrarMesa");
-        res.status(200).send("ok");
+    });
+    pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;', [mesa], (req1, resultados) => {
+        console.log("hola desde cerrarMesa");
+        let boleta = resultados.rows[0].idBoleta;
+        pool.query('SELECT * FROM public."detalle" WHERE "idBoleta" = $1;', [boleta], (req1, resultados) => {
+            /*este seria un buen punto para poner el calculo del total de la boleta */
+            res.status(200).send(resultados.rows[0]);
+        });
     });
 });
 //este cierra mesa, falta cerrar con boleta
