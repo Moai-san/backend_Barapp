@@ -146,6 +146,24 @@ app.post('/abrirMesa',(req:any,res:any)=>{
     });*/
 });
 
+app.post('/verMesa',(req:any,res:any)=>{
+    let mesa = req.body.mesa;
+
+    pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;',[mesa],(req1:any,resultados:any)=>{
+        console.log("hola desde vermesa");
+        let boleta = resultados.rows[0].idBoleta
+        pool.query('SELECT * FROM public."detalle" WHERE "idBoleta" = $1;',[boleta],(req1:any,resultados:any)=>{
+            res.status(200).send(resultados.rows[0]);
+        });
+    });
+    
+/*
+    pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
+        console.log(resultados.rows);
+        res.status(200).send(resultados.rows);
+    });*/
+});
+
 app.post('/cerrarMesa',(req:any,res:any)=>{
     let mesa = req.body.mesa;
 
