@@ -105,7 +105,7 @@ app.post('/addProduct',(req:any,res:any)=>
 
 app.post('/abrirMesa',(req:any,res:any)=>{
     let mesa = req.body.mesa;
-    let usuario = req.body.mesa;
+    let usuario = req.body.usuario;
 
     pool.query('INSERT INTO public.boletas(total) VALUES (0) RETURNING "idBoleta";',[],(req1:any,resultados:any)=>{
         //console.log(resultados.rows);
@@ -117,7 +117,7 @@ app.post('/abrirMesa',(req:any,res:any)=>{
 
         pool.query("UPDATE public.mesas SET status = true WHERE id = $1;",[mesa],(req1:any,resultados:any)=>{
             console.log("hola desde abrirMesa");
-            res.status(200).send("ok");
+            res.status(200).send(resultados.rows);
         });
 
     });
