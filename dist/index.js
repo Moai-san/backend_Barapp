@@ -99,7 +99,7 @@ app.post('/abrirMesa', (req, res) => {
         });
         pool.query("UPDATE public.mesas SET status = true WHERE id = $1;", [mesa], (req1, resultados) => {
             console.log("hola desde abrirMesa");
-            res.status(200).send("ok");
+            res.status(200).send(resultados.rows);
         });
     });
     /*
