@@ -90,7 +90,7 @@ app.post('/addProduct', (req, res) => {
 });
 app.post('/abrirMesa', (req, res) => {
     let mesa = req.body.mesa;
-    let usuario = req.body.mesa;
+    let usuario = req.body.usuario;
     pool.query('INSERT INTO public.boletas(total) VALUES (0) RETURNING "idBoleta";', [], (req1, resultados) => {
         //console.log(resultados.rows);
         let boleta = resultados.rows[0].idBoleta;
