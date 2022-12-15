@@ -104,7 +104,6 @@ app.post('/addProduct',(req:any,res:any)=>
 });
 
 app.post('/abrirMesa',(req:any,res:any)=>{
-    console.log(req.body)
     let mesa = req.body.mesa;
     let usuario = req.body.mesa;
 
