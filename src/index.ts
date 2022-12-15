@@ -156,12 +156,13 @@ app.post('/verMesa',(req:any,res:any)=>{
             res.status(200).send(resultados.rows[0]);
         });
     });
-    
-/*
-    pool.query("SELECT * FROM public.Usuarios ORDER BY id ASC",(req1:any,resultados:any)=>{
-        console.log(resultados.rows);
-        res.status(200).send(resultados.rows);
-    });*/
+});
+
+app.post('/verBoleta',(req:any,res:any)=>{
+    let boleta = req.body.boleta;
+    pool.query('SELECT * FROM public."detalle" WHERE "idBoleta" = $1;',[boleta],(req1:any,resultados:any)=>{
+        res.status(200).send(resultados.rows[0]);
+    });
 });
 
 app.post('/cerrarMesa',(req:any,res:any)=>{
