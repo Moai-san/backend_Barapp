@@ -134,8 +134,16 @@ app.post('/cerrarMesa',(req:any,res:any)=>{
 
     pool.query("UPDATE public.mesas SET status = false WHERE id = $1;",[mesa],(req1:any,resultados:any)=>{
         console.log("hola desde cerrarMesa");
-        res.status(200).send("ok");
     });
+
+    pool.query('SELECT * FROM public."usuarioMesaBoleta" WHERE "idMesa" = $1 ORDER BY "idBoleta" DESC;',[mesa],(req1:any,resultados:any)=>{
+        console.log("hola desde cerrarMesa");
+        let boleta = resultados.rows[0].idBoleta
+        pool.query('SELECT * FROM public."detalle" WHERE "idBoleta" = $1;',[boleta],(req1:any,resultados:any)=>{
+            res.status(200).send(resultados.rows[0]);
+        });
+    });
+
 
 });
 
